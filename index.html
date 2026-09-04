@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Antojos del Campo — Lácteos, amasijos y mixes frescos de San Pedro de los Milagros, Antioquia. Pide por WhatsApp.">
+  <title>Antojos del Campo | Frescura directa del campo</title>
+
+  <!-- Fuentes amigables y redondeadas, al estilo del logo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Toast notifications container -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Cart Drawer / Side Panel -->
+  <aside id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__overlay" aria-hidden="true"></div>
+    <div class="cart-drawer__panel">
+      <header class="cart-drawer__header">
+        <h2 class="cart-drawer__title">Tu carrito</h2>
+        <button type="button" class="cart-drawer__close" aria-label="Cerrar carrito">&times;</button>
+      </header>
+      <div class="cart-drawer__body">
+        <ul class="cart-drawer__items" id="cart-items"></ul>
+        <div class="cart-drawer__empty" id="cart-empty" hidden>
+          <p>Tu carrito está vacío</p>
+          <p class="cart-drawer__empty-hint">Agrega productos desde el catálogo</p>
+        </div>
+      </div>
+      <footer class="cart-drawer__footer">
+        <div class="cart-drawer__subtotal">
+          <span class="cart-drawer__subtotal-label">Subtotal</span>
+          <span class="cart-drawer__subtotal-value" id="cart-subtotal">$0</span>
+        </div>
+        <p class="cart-drawer__shipping-note">* El costo del domicilio se confirmará por WhatsApp</p>
+        <button type="button" class="btn btn--primary cart-drawer__checkout" id="checkout-btn" disabled>Ir a pagar</button>
+      </footer>
+    </div>
+  </aside>
+
+  <!-- Checkout Modal / Form (inside drawer when checkout is clicked) -->
+  <div id="checkout-modal" class="checkout-modal" role="dialog" aria-modal="true" aria-label="Finalizar pedido" hidden>
+    <div class="checkout-modal__overlay" aria-hidden="true"></div>
+    <div class="checkout-modal__panel">
+      <header class="checkout-modal__header">
+        <h2 class="checkout-modal__title">Finalizar pedido</h2>
+        <button type="button" class="checkout-modal__close" aria-label="Cerrar">×</button>
+      </header>
+      <form id="checkout-form" class="checkout-form" novalidate>
+        <div class="checkout-form__section">
+          <h3 class="checkout-form__section-title">Datos de envío</h3>
+          <div class="checkout-form__row">
+            <div class="checkout-form__field">
+              <label for="shipping-name" class="checkout-form__label">Nombre completo <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="shipping-name" name="shippingName" class="checkout-form__input" required autocomplete="name" placeholder="Tu nombre completo">
+              <span class="checkout-form__error" id="error-shipping-name"></span>
+            </div>
+            <div class="checkout-form__field">
+              <label for="shipping-phone" class="checkout-form__label">Teléfono <span class="required" aria-hidden="true">*</span></label>
+              <input type="tel" id="shipping-phone" name="shippingPhone" class="checkout-form__input" required autocomplete="tel" placeholder="300 123 4567">
+              <span class="checkout-form__error" id="error-shipping-phone"></span>
+            </div>
+          </div>
+          <div class="checkout-form__field">
+            <label for="shipping-address" class="checkout-form__label">Dirección <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" id="shipping-address" name="shippingAddress" class="checkout-form__input" required autocomplete="street-address" placeholder="Calle, número, apartamento, etc.">
+            <span class="checkout-form__error" id="error-shipping-address"></span>
+          </div>
+          <div class="checkout-form__field">
+            <label for="shipping-neighborhood" class="checkout-form__label">Barrio <span class="required" aria-hidden="true">*</span></label>
+            <input type="text" id="shipping-neighborhood" name="shippingNeighborhood" class="checkout-form__input" required autocomplete="address-level2" placeholder="Nombre del barrio">
+            <span class="checkout-form__error" id="error-shipping-neighborhood"></span>
+          </div>
+        </div>
+        <div class="checkout-form__section">
+          <h3 class="checkout-form__section-title">Pago</h3>
+          <div class="checkout-form__field">
+            <label for="payment-method" class="checkout-form__label">Método de pago <span class="required" aria-hidden="true">*</span></label>
+            <select id="payment-method" name="paymentMethod" class="checkout-form__select" required>
+              <option value="">Selecciona un método</option>
+              <option value="nequi">Nequi</option>
+              <option value="bancolombia">Bancolombia</option>
+              <option value="efectivo">Efectivo contra entrega</option>
+            </select>
+            <span class="checkout-form__error" id="error-payment-method"></span>
+          </div>
+        </div>
+        <div class="checkout-form__section">
+          <h3 class="checkout-form__section-title">Notas adicionales</h3>
+          <div class="checkout-form__field">
+            <label for="notes" class="checkout-form__label">Notas adicionales</label>
+            <textarea id="notes" name="notes" class="checkout-form__textarea" rows="3" placeholder="Ej: Entregar en portería, llamar al llegar, etc."></textarea>
+          </div>
+        </div>
+        <div class="checkout-form__actions">
+          <button type="button" class="btn btn--secondary checkout-form__back" id="checkout-back">Volver al carrito</button>
+          <button type="submit" class="btn btn--primary checkout-form__submit" id="checkout-submit">Enviar pedido por WhatsApp</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<body>
+
+  <!-- ==================== HÉROE ==================== -->
+  <header class="hero" id="inicio">
+    <div class="hero__overlay"></div>
+    <!-- Decoración flotante del héroe -->
+    <div class="deco deco--hero" aria-hidden="true">
+      <span class="deco__leaf deco__leaf--1">🌿</span>
+      <span class="deco__leaf deco__leaf--2">🍃</span>
+      <span class="deco__spark deco__spark--1">✦</span>
+      <span class="deco__spark deco__spark--2">✦</span>
+      <span class="deco__spark deco__spark--3">✦</span>
+    </div>
+    <nav class="hero__nav">
+      <a href="#inicio" class="hero__nav-logo">
+        <img src="assets/images/logonuevo.png" alt="Antojos del Campo" width="72" height="72">
+      </a>
+      <a href="#contacto" class="hero__nav-link">Contacto</a>
+    </nav>
+
+    <div class="hero__content">
+      <img
+        class="hero__logo"
+        src="assets/images/logonuevo.png"
+        alt="Logo Antojos del Campo — lácteos y amasijos de San Pedro de los Milagros"
+        width="200"
+        height="200"
+      >
+      <p class="hero__tagline">La frescura de San Pedro, directo a tu mesa.</p>
+      <a href="#catalogo" class="btn btn--primary btn--hero">VER CATÁLOGO</a>
+    </div>
+
+    <div class="hero__scroll-hint" aria-hidden="true">
+      <span></span>
+    </div>
+  </header>
+
+  <!-- Separador ondulado héroe → origen -->
+  <div class="wave-divider wave-divider--cream" aria-hidden="true"></div>
+
+  <main>
+
+    <!-- ==================== ORIGEN ==================== -->
+    <section class="origen" id="origen">
+      <div class="container">
+        <div class="origen__card">
+          <div class="origen__icon" aria-hidden="true">🌾</div>
+          <h2 class="origen__title">Directo del corazón de Antioquia</h2>
+          <p class="origen__text">
+            Todos nuestros lácteos y amasijos son traídos directamente desde
+            <strong>San Pedro de los Milagros, Antioquia</strong>.
+            Autenticidad y sabor garantizados.
+          </p>
+          <div class="origen__divider"></div>
+          <p class="origen__sub">Tradición campesina · Ingredientes naturales · Entrega a domicilio</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CATÁLOGO VISUAL ==================== -->
+    <section class="catalogo" id="catalogo">
+      <div class="container">
+
+        <header class="section-header">
+          <span class="section-header__eyebrow">✨ Nuestro catálogo ✨</span>
+          <h2 class="section-header__title">Sabores que enamoran 💚</h2>
+          <p class="section-header__desc">
+            Explora nuestros productos y pide fácilmente por WhatsApp.
+            Cada bocado lleva el alma del campo antioqueño.
+          </p>
+        </header>
+
+        <!-- A. Clásicos del Campo -->
+        <div class="catalogo__subsection">
+          <div class="subsection-header">
+            <span class="subsection-header__emoji" aria-hidden="true">🧀</span>
+            <h3 class="subsection-header__title">Nuestros Clásicos del Campo</h3>
+            <p class="subsection-header__desc">Lácteos y amasijos artesanales, frescos y llenos de sabor.</p>
+          </div>
+
+          <div class="product-grid product-grid--classics">
+
+            <article class="product-card" data-product-id="quesitos" data-product-name="Quesitos" data-product-price="13000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/quesito.png"
+                  alt="Quesitos frescos artesanales"
+                  loading="lazy"
+                  width="1248"
+                  height="862"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Quesitos</h4>
+                <p class="product-card__desc">Suaves, cremosos y con ese toque salado que conquista desde el primer bocado.</p>
+                <p class="product-card__price">$13.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Quesitos">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="cuajadas" data-product-name="Cuajadas" data-product-price="13000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/cuajada.png"
+                  alt="Cuajada fresca de leche"
+                  loading="lazy"
+                  width="1248"
+                  height="862"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Cuajadas</h4>
+                <p class="product-card__desc">Textura sedosa y sabor auténtico de leche recién ordeñada del campo.</p>
+                <p class="product-card__price">$13.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Cuajadas">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="pandequeso" data-product-name="Pandequesos" data-product-price="12000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/pandequeso.png"
+                  alt="Pandequesos dorados recién horneados"
+                  loading="lazy"
+                  width="1024"
+                  height="1024"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Pandequesos</h4>
+                <p class="product-card__desc">Crujientes por fuera, esponjosos por dentro. El clásico que no puede faltar.</p>
+                <p class="product-card__price">$12.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Pandequesos">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="almojabanas" data-product-name="Almojábanas" data-product-price="12000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/almojabanas.png"
+                  alt="Almojábanas esponjosas con queso"
+                  loading="lazy"
+                  width="1024"
+                  height="1024"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Almojábanas</h4>
+                <p class="product-card__desc">Esponjosas y doradas, con el equilibrio perfecto entre queso y masa.</p>
+                <p class="product-card__price">$12.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Almojábanas">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="quesadillas-bocadillo" data-product-name="Quesadillas de bocadillo" data-product-price="11000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/quesadillas-bocadillo.png"
+                  alt="Quesadilla rellena de bocadillo"
+                  loading="lazy"
+                  width="1248"
+                  height="862"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Quesadillas de bocadillo</h4>
+                <p class="product-card__desc">Masa tierna envuelta en dulce de guayaba: un abrazo de sabor antioqueño.</p>
+                <p class="product-card__price">$11.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Quesadillas de bocadillo">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="quesadillas-arequipe" data-product-name="Quesadillas de arequipe" data-product-price="11000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/quesadillas-arequipe.png"
+                  alt="Quesadilla rellena de arequipe"
+                  loading="lazy"
+                  width="1248"
+                  height="862"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Quesadillas de arequipe</h4>
+                <p class="product-card__desc">Cremosas y dulces, con arequipe artesanal que se derrite en la boca.</p>
+                <p class="product-card__price">$11.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Quesadillas de arequipe">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="mantequilla" data-product-name="Mantequilla natural" data-product-price="16000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/mantequilla.jpg"
+                  alt="Mantequilla natural de campo"
+                  loading="lazy"
+                  width="2528"
+                  height="1692"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Mantequilla natural</h4>
+                <p class="product-card__desc">Cremosa y aromática, elaborada con leche fresca sin aditivos.</p>
+                <p class="product-card__price">$16.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Mantequilla natural">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="arepas-chocolo" data-product-name="Arepas de chocolo" data-product-price="10000">
+              <div class="product-card__image-wrap">
+                <img
+                  src="assets/images/arepa-chocolo.jpg"
+                  alt="Arepas de chocolo dulces"
+                  loading="lazy"
+                  width="2528"
+                  height="1692"
+                >
+              </div>
+              <div class="product-card__body">
+                <h4 class="product-card__name">Arepas de chocolo</h4>
+                <p class="product-card__desc">Dulces y doradas, con el aroma inconfundible del maíz tierno recién cosechado.</p>
+                <p class="product-card__price">$10.000</p>
+                <div class="product-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Arepas de chocolo">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- B. Mixes Frescos e Instantáneos -->
+        <div class="catalogo__subsection catalogo__subsection--mixes">
+          <div class="subsection-header">
+            <span class="subsection-header__emoji" aria-hidden="true">🥤</span>
+            <h3 class="subsection-header__title">Mixes Frescos e Instantáneos</h3>
+            <p class="subsection-header__desc">
+              Mezclas congeladas de frutas y vegetales. Solo licúa con agua y disfruta.
+              Pack x 10 unidades (120 g c/u) · 1 porción = 1 vaso de hasta 14 oz.
+            </p>
+          </div>
+
+          <div class="mix-grid">
+
+            <!-- Mix Verde -->
+            <article class="mix-card mix-card--verde" data-product-id="mix-verde" data-product-name="Mix Verde" data-product-price="25000">
+              <div class="mix-card__visual">
+                <img src="assets/images/mix-verde.png" alt="Mix Verde — Perejil, espinacas, pepino, apio y piña" loading="lazy">
+                <span class="mix-card__price">$25.000 <small>pack x 10</small></span>
+                <div class="mix-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Mix Verde">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+              <div class="mix-card__content">
+                <span class="mix-card__badge">Mix Verde</span>
+                <div class="mix-card__ingredients">Perejil, espinacas, pepino, apio y piña</div>
+                <ul class="mix-card__benefits">
+                  <li>Alto contenido en fibra y antioxidantes</li>
+                  <li>Apoya la función del metabolismo</li>
+                  <li>Efecto diurético y depurativo</li>
+                </ul>
+                <div class="mix-card__badges-row">
+                  <span>Sin conservantes</span>
+                  <span>Sin agua añadida</span>
+                  <span>Sin azúcar añadida</span>
+                </div>
+                <div class="mix-card__footer">
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Mix Rojo -->
+            <article class="mix-card mix-card--rojo" data-product-id="mix-rojo" data-product-name="Mix Rojo" data-product-price="25000">
+              <div class="mix-card__visual">
+                <img src="assets/images/mix-rojo.png" alt="Mix Rojo — Remolacha, zanahoria, pepino y piña" loading="lazy">
+                <span class="mix-card__price">$25.000 <small>pack x 10</small></span>
+                <div class="mix-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Mix Rojo">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+              <div class="mix-card__content">
+                <span class="mix-card__badge">Mix Rojo</span>
+                <div class="mix-card__ingredients">Remolacha, zanahoria, pepino y piña</div>
+                <ul class="mix-card__benefits">
+                  <li>Alto contenido en antioxidantes</li>
+                  <li>Favorece la circulación sanguínea</li>
+                  <li>Contribuye a mejorar la digestión</li>
+                </ul>
+                <div class="mix-card__badges-row">
+                  <span>Sin conservantes</span>
+                  <span>Sin agua añadida</span>
+                  <span>Sin azúcar añadida</span>
+                </div>
+                <div class="mix-card__footer">
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Mix Amarillo -->
+            <article class="mix-card mix-card--amarillo" data-product-id="mix-amarillo" data-product-name="Mix Amarillo" data-product-price="25000">
+              <div class="mix-card__visual">
+                <img src="assets/images/mix-amarillo.png" alt="Mix Amarillo — Mango, piña, espinaca y chía" loading="lazy">
+                <span class="mix-card__price">$25.000 <small>pack x 10</small></span>
+                <div class="mix-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Mix Amarillo">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+              <div class="mix-card__content">
+                <span class="mix-card__badge">Mix Amarillo</span>
+                <div class="mix-card__ingredients">Mango, piña, espinaca y chía</div>
+                <ul class="mix-card__benefits">
+                  <li>Combate la sensación de cansancio</li>
+                  <li>La chía prolonga la saciedad</li>
+                  <li>Mejora el tránsito intestinal</li>
+                </ul>
+                <div class="mix-card__badges-row">
+                  <span>Sin conservantes</span>
+                  <span>Sin agua añadida</span>
+                  <span>Sin azúcar añadida</span>
+                </div>
+                <div class="mix-card__footer">
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Mix Naranja -->
+            <article class="mix-card mix-card--naranja" data-product-id="mix-naranja" data-product-name="Mix Naranja" data-product-price="25000">
+              <div class="mix-card__visual">
+                <img src="assets/images/mix-naranja.png" alt="Mix Naranja — Papaya, apio, piña y chía" loading="lazy">
+                <span class="mix-card__price">$25.000 <small>pack x 10</small></span>
+                <div class="mix-card__actions">
+                  <div class="quantity-selector" aria-label="Cantidad de Mix Naranja">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--decrease" aria-label="Disminuir cantidad">−</button>
+                    <input type="number" class="quantity-selector__input" value="1" min="1" max="99" aria-label="Cantidad">
+                    <button type="button" class="quantity-selector__btn quantity-selector__btn--increase" aria-label="Aumentar cantidad">+</button>
+                  </div>
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+              <div class="mix-card__content">
+                <span class="mix-card__badge">Mix Naranja</span>
+                <div class="mix-card__ingredients">Papaya, apio, piña y chía</div>
+                <ul class="mix-card__benefits">
+                  <li>Ayuda al tránsito intestinal gracias a la papaya</li>
+                  <li>Aporta vitaminas A y C</li>
+                  <li>Contribuye a una mejor digestión</li>
+                </ul>
+                <div class="mix-card__badges-row">
+                  <span>Sin conservantes</span>
+                  <span>Sin agua añadida</span>
+                  <span>Sin azúcar añadida</span>
+                </div>
+                <div class="mix-card__footer">
+                  <button type="button" class="product-card__cta product-card__cta--add" data-action="add-to-cart">Agregar al carrito</button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Preparación común -->
+          <div class="mix-prep">
+            <h4 class="mix-prep__title">Preparación</h4>
+            <p class="mix-prep__text">
+              Lava y destapa el empaque, agrega un vaso de agua por cada 120 g de producto
+              y mezcla en la licuadora. ¡Listo en segundos!
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer" id="contacto">
+    <div class="container footer__inner">
+      <img src="assets/images/logonuevo.png" alt="" class="footer__logo" width="100" height="100" aria-hidden="true">
+      <p class="footer__love">Hecho con amor en San Pedro de los Milagros.</p>
+      <div class="footer__contact">
+        <a href="http://wa.me/+573136994356" class="footer__whatsapp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escríbenos por WhatsApp
+        </a>
+        <a href="https://instagram.com/antojos.delcampo" class="footer__instagram" target="_blank" rel="noopener">@antojos.delcampo</a>
+        <p class="footer__phone">Domicilios: <a href="tel:+573136994356">313 699 4356</a></p>
+      </div>
+      <p class="footer__copy">&copy; 2026 Antojos del Campo. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ==================== BOTÓN FLOTANTE CARRITO ==================== -->
+  <button class="cart-float" id="cart-float" aria-label="Ver carrito" type="button">
+    <span class="cart-float__pulse"></span>
+    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    <span class="cart-float__badge" id="cart-badge" aria-label="Productos en carrito">0</span>
+  </button>
+
+  <!-- ==================== BOTÓN FLOTANTE WHATSAPP ==================== -->
+  <a
+    href="http://wa.me/+573136994356"
+    class="whatsapp-float"
+    target="_blank"
+    rel="noopener"
+    aria-label="Pedir por WhatsApp"
+  >
+    <span class="whatsapp-float__pulse"></span>
+    <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- ==================== LIGHTBOX — Vista previa de imágenes Mix ==================== -->
+
+  <script>
+    (function () {
+      var visuals = document.querySelectorAll('.mix-card__visual, .product-card__image-wrap');
+      var lightbox = document.getElementById('lightbox');
+      var lightboxImg = lightbox.querySelector('.lightbox__image');
+      var closeBtn = lightbox.querySelector('.lightbox__close');
+
+      function open(visual) {
+        var img = visual.querySelector('img');
+        var src = img.currentSrc || img.src;
+        // Unsplash: solicita una resolución mayor para la vista previa
+        src = src.replace(/w=\d+/, 'w=1200');
+        lightboxImg.src = src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('is-open');
+        document.body.classList.add('no-scroll');
+      }
+
+      function close() {
+        lightbox.classList.remove('is-open');
+        document.body.classList.remove('no-scroll');
+      }
+
+      Array.prototype.forEach.call(visuals, function (visual) {
+        visual.addEventListener('click', function () {
+          open(visual);
+        });
+      });
+
+      lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox || e.target === lightboxImg) {
+          close();
+        }
+      });
+
+      closeBtn.addEventListener('click', function () {
+        close();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          close();
+        }
+      });
+
+      lightbox.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+      }, { passive: false });
+    })();
+  </script>
+
+  <!-- Cart System -->
+  <script src="js/cart.js"></script>
+
+</body>
+</html>
