@@ -801,7 +801,7 @@ ul {
 
 .mix-card--verde .mix-card__badge    { background: var(--mix-verde); }
 .mix-card--rojo .mix-card__badge     { background: var(--mix-rojo); }
-.mix-card--amarillo .mix-card__badge { background: var(--mix-amarillo); color: var(--text-dark); }
+.mix-card--amarillo .mix-card__badge { background: var(--mix-amarillo); color: var(--white); }
 .mix-card--naranja .mix-card__badge  { background: var(--mix-naranja); }
 
 .mix-card__ingredients {
@@ -815,7 +815,7 @@ ul {
 
 .mix-card--verde .mix-card__ingredients    { background: var(--mix-verde); }
 .mix-card--rojo .mix-card__ingredients     { background: var(--mix-rojo); }
-.mix-card--amarillo .mix-card__ingredients { background: var(--green-moss); }
+.mix-card--amarillo .mix-card__ingredients { background: var(--mix-amarillo); }
 .mix-card--naranja .mix-card__ingredients  { background: var(--mix-naranja); }
 
 .mix-card__benefits {
@@ -1163,7 +1163,7 @@ body.no-scroll {
     grid-template-columns: 1fr;
   }
 
-  .mix-card__footer {
+.mix-card__footer {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
@@ -1220,7 +1220,7 @@ body.no-scroll {
 .toast-container {
   position: fixed;
   bottom: 5.5rem;
-  right: 1.5rem;
+  right: 8rem;
   z-index: 3000;
   display: flex;
   flex-direction: column;
@@ -1333,6 +1333,7 @@ body.no-scroll {
   color: var(--text-dark);
   background: var(--cream);
   -moz-appearance: textfield;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out;
 }
 
 .quantity-selector__input::-webkit-outer-spin-button,
@@ -1344,6 +1345,19 @@ body.no-scroll {
 .quantity-selector__input:focus {
   outline: none;
   background: rgba(124, 179, 66, 0.05);
+}
+
+.quantity-selector__input--error {
+  animation: inputShake 0.4s ease-out;
+  border: 2px solid #dc3232;
+  box-shadow: none;
+  transition: border-color 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }
 
 /* ============================================================

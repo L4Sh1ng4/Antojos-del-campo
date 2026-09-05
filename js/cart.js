@@ -13,6 +13,26 @@
   const STORAGE_KEY = 'antojos_cart';
   const MAX_QUANTITY = 99;
 
+  // Mapa de IDs de producto a sus archivos de imagen reales
+  const PRODUCT_IMAGES = {
+    'quesitos': 'quesito.png',
+    'cuajadas': 'cuajada.png',
+    'pandequeso': 'pandequeso.png',
+    'almojabanas': 'almojabanas.png',
+    'quesadillas-bocadillo': 'quesadillas-bocadillo.png',
+    'quesadillas-arequipe': 'quesadillas-arequipe.png',
+    'mantequilla': 'mantequilla.jpg',
+    'arepas-chocolo': 'arepa-chocolo.jpg',
+    'mix-verde': 'mix-verde.png',
+    'mix-rojo': 'mix-rojo.png',
+    'mix-amarillo': 'mix-amarillo.png',
+    'mix-naranja': 'mix-naranja.png'
+  };
+
+  function getProductImageSrc(productId) {
+    return `assets/images/${PRODUCT_IMAGES[productId] || productId + '.png'}`;
+  }
+
   // ============================================================
   // ESTADO DEL CARRITO
   // ============================================================
@@ -205,7 +225,18 @@
     // Buscar el input de cantidad en la misma tarjeta
     const cardElement = addBtn.closest('[data-product-id]');
     const quantityInput = cardElement?.querySelector('.quantity-selector__input');
-    const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+    const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 0;
+
+    // Validar cantidad
+    if (quantity <= 0) {
+      showToast('Por favor ingrese una cantidad', 'error');
+      // Animar el input para llamar la atención
+      if (quantityInput) {
+        quantityInput.classList.add('quantity-selector__input--error');
+        setTimeout(() => quantityInput.classList.remove('quantity-selector__input--error'), 1000);
+      }
+      return;
+    }
 
     addToCart({
       id: productId,
@@ -214,9 +245,9 @@
       quantity: quantity
     });
 
-    // Reset quantity input to 1
+    // Reset quantity input to 0
     if (quantityInput) {
-      quantityInput.value = 1;
+      quantityInput.value = 0;
     }
 
     // Animación de confirmación en el botón
@@ -234,9 +265,9 @@
     const input = btn.parentElement?.querySelector('.quantity-selector__input');
     if (!input) return;
 
-    const current = parseInt(input.value, 10) || 1;
+    const current = parseInt(input.value, 10) || 0;
     const isIncrease = btn.classList.contains('quantity-selector__btn--increase');
-    const newValue = isIncrease ? Math.min(current + 1, 99) : Math.max(current - 1, 1);
+    const newValue = isIncrease ? Math.min(current + 1, 99) : Math.max(current - 1, 0);
     input.value = newValue;
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }
@@ -246,7 +277,7 @@
     if (!input) return;
 
     let value = parseInt(input.value, 10);
-    if (isNaN(value) || value < 1) value = 1;
+    if (isNaN(value) || value < 0) value = 0;
     if (value > 99) value = 99;
     input.value = value;
   }
@@ -375,13 +406,14 @@
       if (cartEmpty) cartEmpty.hidden = false;
       if (cartItemsContainer) cartItemsContainer.innerHTML = '';
       if (checkoutBtn) checkoutBtn.disabled = true;
+      updateSubtotalDisplay();
     } else {
       if (cartEmpty) cartEmpty.hidden = true;
       if (checkoutBtn) checkoutBtn.disabled = false;
 
       cartItemsContainer.innerHTML = cart.map(item => `
         <li class="cart-item" data-product-id="${item.id}">
-          <img class="cart-item__image" src="assets/images/${item.id}.png" alt="${item.name}" loading="lazy">
+          <img class="cart-item__image" src="${getProductImageSrc(item.id)}" alt="${item.name}" loading="lazy">
           <div class="cart-item__details">
             <span class="cart-item__name">${escapeHtml(item.name)}</span>
             <span class="cart-item__price">${formatPrice(item.price)} c/u</span>
