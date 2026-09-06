@@ -4,7 +4,7 @@ Actúa como Ingeniero Frontend Senior especializado en HTML, CSS, JavaScript y R
 
 ## Contexto del proyecto
 
-Sitio web catálogo virtual para **"Antojos del Campo"**, negocio de productos lácteos, amasijos y mixes congelados artesanales de **San Pedro de los Milagros, Antioquia (Colombia)**. La frescura directa del campo, con pedidos por WhatsApp.
+Sitio web catálogo virtual para **"Antojos del Campo"**, negocio de productos lácteos, horneados y mixes congelados artesanales de **San Pedro de los Milagros, Antioquia (Colombia)**. La frescura directa del campo, con pedidos por WhatsApp.
 
 ## Stack
 
@@ -38,7 +38,7 @@ Sitio web catálogo virtual para **"Antojos del Campo"**, negocio de productos l
 - **Lightbox (vista previa ampliada)**: al hacer click/tap sobre las imágenes de mixes y clásicos se abre un modal `.lightbox` con la imagen en grande. Cierra con click en fondo/imagen, botón × o tecla ESC. Congela el scroll de fondo.
 - **Icono de lupa minimalista**: círculo *frosted glass* de 34px con lupa SVG de trazo fino (verde `#2d5a27`), semi-transparente (opacity 0.7), sutil y no invasivo.
 - Fotos de los 8 clásicos son locales: `quesito.png`, `cuajada.png`, `pandequeso.png`, `almojabanas.png`, `quesadillas-bocadillo.png`, `quesadillas-arequipe.png`, `mantequilla.jpg`, `arepa-chocolo.jpg`.
-- El logo actual es `assets/images/logonuevo.png` (fondo blanco exterior convertido a transparente con borde difuminado; los blancos internos del diseño se preservan), usado en el nav del héroe, héroe y footer con `border-radius: 50%`. El original `logonuevo.jpeg` se conserva como respaldo sin referenciar.
+- El logo actual es `assets/images/logo-nuevo-transparente.png` (fondo blanco exterior convertido a transparente con borde difuminado; los blancos internos del diseño se preservan), usado en el nav del héroe, héroe y footer con `border-radius: 50%`. El original `logonuevo.jpeg` se conserva como respaldo sin referenciar.
 - Responsive: móvil (columnas apiladas) y escritorio (≥768px: tarjetas horizontales; mixes con imagen al 45% del ancho).
 
 ## Convenciones

@@ -622,7 +622,7 @@
 
   function formatPaymentMethod(method) {
     const methods = {
-      nequi: 'Nequi',
+      breb: 'Bre-B',
       bancolombia: 'Bancolombia',
       efectivo: 'Efectivo contra entrega'
     };

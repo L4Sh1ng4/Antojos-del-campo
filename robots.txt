@@ -1,0 +1,12 @@
+# robots.txt for Antojos del Campo
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://antojosdelcampo.com/sitemap.xml
+
+# Disallow admin/private areas
+Disallow: /css/
+Disallow: /js/
+Disallow: /assets/images/
+Disallow: /assets/images/

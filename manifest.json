@@ -1,0 +1,41 @@
+{
+  "name": "Antojos del Campo",
+  "short_name": "Antojos Campo",
+  "description": "Lácteos, horneados y mixes frescos artesanales de San Pedro de los Milagros, Antioquia. Productos 100% naturales, sin conservantes. Pide por WhatsApp.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf6ef",
+  "theme_color": "#4a7c3f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/images/logo-nuevo-transparente.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/logo-nuevo-transparente.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "shopping"],
+  "shortcuts": [
+    {
+      "name": "Ver Catálogo",
+      "short_name": "Catálogo",
+      "description": "Ver catálogo de productos",
+      "url": "/#catalogo",
+      "icons": [{ "src": "assets/images/logo-nuevo-transparente.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pedir por WhatsApp",
+      "short_name": "WhatsApp",
+      "description": "Pedir por WhatsApp",
+      "url": "http://wa.me/+573136994356",
+      "icons": [{ "src": "assets/images/logo-nuevo-transparente.png", "sizes": "192x192" }]
+    }
+  ]
+}
