@@ -820,6 +820,18 @@ ul {
   font-weight: 600;
   color: var(--green-moss);
   margin-bottom: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.product-card__price small {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .product-card__cta {
@@ -1068,6 +1080,56 @@ ul {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Precio móvil - visible solo en móvil */
+.mix-card__price--mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mix-card__visual .mix-card__price {
+    display: none;
+  }
+  
+  .mix-card__price--mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    text-align: center;
+  }
+  
+  .mix-card__price--mobile small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Colores específicos por mix para el precio en el visual - gradientes pastel del fondo de la tarjeta */
+  .mix-card--verde .mix-card__visual .mix-card__price--mobile {
+    background: linear-gradient(160deg, #e8f5e3, #d4ecd0);
+  }
+  
+  .mix-card--rojo .mix-card__visual .mix-card__price--mobile {
+    background: linear-gradient(160deg, #fce8f0, #f5d0e0);
+  }
+  
+  .mix-card--amarillo .mix-card__visual .mix-card__price--mobile {
+    background: linear-gradient(160deg, #fef9e0, #f5ecc0);
+  }
+  
+  .mix-card--naranja .mix-card__visual .mix-card__price--mobile {
+    background: linear-gradient(160deg, #fff0e0, #ffe0c0);
+  }
 }
 
 .mix-card--verde .btn--mix:hover    { background: var(--mix-verde); color: var(--white); }
