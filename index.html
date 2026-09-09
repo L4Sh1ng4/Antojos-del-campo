@@ -295,7 +295,7 @@
             </div>
             <div class="checkout-form__field">
               <label for="shipping-phone" class="checkout-form__label">Teléfono <span class="required" aria-hidden="true">*</span></label>
-              <input type="tel" id="shipping-phone" name="shippingPhone" class="checkout-form__input" required autocomplete="tel" placeholder="300 123 4567">
+              <input type="tel" id="shipping-phone" name="shippingPhone" class="checkout-form__input" required autocomplete="tel" inputmode="numeric" pattern="[0-9]*" maxlength="15">
               <span class="checkout-form__error" id="error-shipping-phone"></span>
             </div>
           </div>
@@ -315,7 +315,7 @@
           <div class="checkout-form__field">
             <label for="payment-method" class="checkout-form__label">Método de pago <span class="required" aria-hidden="true">*</span></label>
             <select id="payment-method" name="paymentMethod" class="checkout-form__select" required>
-              <option value="">Selecciona un método</option>
+              <option value="" disabled selected hidden>Selecciona un método</option>
               <option value="breb">Bre-B</option>
               <option value="bancolombia">Bancolombia</option>
               <option value="efectivo">Efectivo contra entrega</option>

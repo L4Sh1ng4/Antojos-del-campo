@@ -184,6 +184,15 @@
       checkoutFormEl.addEventListener('submit', handleCheckoutSubmit);
     }
 
+// Filtrar input de teléfono: solo permitir números
+    const phoneInput = document.getElementById('shipping-phone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', function(e) {
+        // Filtrar solo números
+        this.value = this.value.replace(/\D/g, '');
+      });
+    }
+
     if (checkoutBackBtn) {
       checkoutBackBtn.addEventListener('click', () => {
         closeCheckoutModal();
@@ -551,32 +560,40 @@
   function validateCheckoutForm() {
     let isValid = true;
     const requiredFields = [
-      { id: 'shipping-name', errorId: 'error-shipping-name' },
-      { id: 'shipping-phone', errorId: 'error-shipping-phone' },
-      { id: 'shipping-address', errorId: 'error-shipping-address' },
-      { id: 'shipping-neighborhood', errorId: 'error-shipping-neighborhood' },
-      { id: 'payment-method', errorId: 'error-payment-method' }
+      { id: 'shipping-name', errorId: 'error-shipping-name', message: 'Por favor ingresa tu nombre completo' },
+      { id: 'shipping-phone', errorId: 'error-shipping-phone', message: 'Por favor ingresa tu número de teléfono' },
+      { id: 'shipping-address', errorId: 'error-shipping-address', message: 'Por favor ingresa tu dirección completa' },
+      { id: 'shipping-neighborhood', errorId: 'error-shipping-neighborhood', message: 'Por favor ingresa tu barrio' },
+      { id: 'payment-method', errorId: 'error-payment-method', message: 'Por favor selecciona un método de pago' }
     ];
 
     requiredFields.forEach(field => {
       const input = document.getElementById(field.id);
       const errorEl = document.getElementById(field.errorId);
+      const fieldContainer = input.closest('.checkout-form__field');
       if (!input.value.trim()) {
-        if (errorEl) errorEl.textContent = 'Este campo es obligatorio';
+        if (errorEl) errorEl.textContent = field.message;
+        if (fieldContainer) fieldContainer.classList.add('has-error');
         isValid = false;
-      } else if (errorEl) {
-        errorEl.textContent = '';
+      } else {
+        if (errorEl) errorEl.textContent = '';
+        if (fieldContainer) fieldContainer.classList.remove('has-error');
       }
     });
 
-    // Validar teléfono (formato básico colombiano)
+    // Validar teléfono (solo números, sin espacios ni caracteres especiales)
     const phoneInput = document.getElementById('shipping-phone');
     if (phoneInput && phoneInput.value.trim()) {
-      const phoneRegex = /^[\d\s\-\(\)]{10,}$/;
+      const phoneRegex = /^\d{10,15}$/;
       if (!phoneRegex.test(phoneInput.value.trim())) {
         const errorEl = document.getElementById('error-shipping-phone');
-        if (errorEl) errorEl.textContent = 'Formato de teléfono inválido';
+        if (errorEl) errorEl.textContent = 'El teléfono debe contener solo números (10-15 dígitos)';
+        const fieldContainer = phoneInput.closest('.checkout-form__field');
+        if (fieldContainer) fieldContainer.classList.add('has-error');
         isValid = false;
+      } else {
+        const fieldContainer = phoneInput.closest('.checkout-form__field');
+        if (fieldContainer) fieldContainer.classList.remove('has-error');
       }
     }
 
@@ -586,6 +603,9 @@
   function clearFormErrors() {
     document.querySelectorAll('.checkout-form__error').forEach(el => {
       el.textContent = '';
+    });
+    document.querySelectorAll('.checkout-form__field.has-error').forEach(el => {
+      el.classList.remove('has-error');
     });
   }
 

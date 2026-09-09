@@ -2180,9 +2180,7 @@ body.no-scroll {
   margin-top: 0.25rem;
 }
 
-.checkout-form__field:has(input:invalid:not(:placeholder-shown)) .checkout-form__error,
-.checkout-form__field:has(select:invalid) .checkout-form__error,
-.checkout-form__field:has(textarea:invalid) .checkout-form__error {
+.checkout-form__field.has-error .checkout-form__error {
   display: block;
 }
 
